@@ -1,0 +1,40 @@
+there are three ways of applying style
+1. inline 2) external 3) style tag
+
+display : display property specifies how any element will render on website 
+a) Block : takes newLine
+           take full width of viewport
+           we can give height , width , margin and paddinhg
+# flexBox is a layouting technique in which there is an container and in that there are items  .
+
+CSS pre-processors are tools that extend the functionality of CSS (Cascading Style Sheets), the language
+ used for styling web pages. They introduce features that are not available in regular CSS, such as variables, 
+ mixins, nesting, inheritance, functions, and more.
+
+The main purpose of CSS pre-processors is to make CSS code more maintainable, modular, and efficient. They 
+allow developers to write cleaner and more organized code by providing features like:
+
+Variables: Allows defining reusable values that can be used throughout the stylesheet. This makes it easier
+ to maintain consistency and make global changes.
+
+Nesting: Enables nesting CSS rules within one another, which helps in organizing and structuring styles in 
+a hierarchical way, similar to how HTML elements are nested.
+
+Mixins: Allows defining reusable blocks of styles that can be included within other style rules. This 
+promotes code reusability and reduces redundancy.
+
+Functions and Operations: Introduce functions and mathematical operations, enabling more dynamic and 
+flexible stylesheets.
+
+Importing: Allows splitting CSS code into multiple files and then importing them into a single file,
+ which helps in managing large projects and keeping the codebase organized.
+
+Some popular CSS pre-processors include:
+
+Sass (Syntactically Awesome Stylesheets)
+LESS (Leaner Style Sheets)
+Stylus
+These pre-processors must be compiled into regular CSS before being served to web browsers, as browsers do 
+not understand their syntax directly. This compilation process can be done using command-line tools, build 
+systems like Gulp or Grunt, or through integrated development environments (IDEs) and text editors that 
+support pre-processors.

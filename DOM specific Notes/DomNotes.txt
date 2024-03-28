@@ -1,0 +1,317 @@
+A platform may be a browser, or a web-server or another host, or even a “smart” coffee machine if it can run JavaScript.
+ Each of these provides platform-specific functionality. The JavaScript specification calls that a host environment.
+# : A host environment provides its own objects and functions in addition to the language core. Web browsers give a 
+means to control web pages. Node.js provides server-side features, and so on.
+# : There’s a “root” object called window. It has two roles:
+
+1. First, it is a global object for JavaScript code, as described in the chapter Global object.
+2. Second, it represents the “browser window” and provides methods to control it.
+
+DOM (Document Object Model) : 
+The Document Object Model, or DOM for short, represents all page content as objects that can be modified.
+BOM (Browser Object Model)
+The Browser Object Model (BOM) represents additional objects provided by the browser (host environment) for working 
+with everything except the document.
+
+# : DOM tree
+The backbone of an HTML document is tags.
+
+According to the Document Object Model (DOM), every HTML tag is an object. Nested tags are “children” of the enclosing 
+one. The text inside a tag is an object as well.
+
+# : Autocorrection
+If the browser encounters malformed HTML, it automatically corrects it when making the DOM.
+# : Everything in HTML, even comments, becomes a part of the DOM.
+
+There are 12 node types. In practice we usually work with 4 of them:
+
+1 .document – the “entry point” into DOM.
+2 element nodes – HTML-tags, the tree building blocks.
+3 .text nodes – contain text.
+4.comments – sometimes we can put information there, it won’t be shown, but JS can read it from the DOM.
+
+Walking the DOM
+The DOM allows us to do anything with elements and their contents, but first we need to reach the corresponding DOM
+ object.
+
+All operations on the DOM start with the document object. That’s the main “entry point” to DOM. From it we can access
+ any node.
+
+ <html> = document.documentElement
+ <body> = document.body
+ <head> = document.head
+
+Child nodes (or children) – elements that are direct children. In other words, they are nested exactly in the given one.
+ For instance, <head> and <body> are children of <html> element.
+Descendants – all elements that are nested in the given one, including children, their children and so on.
+
+# : The childNodes collection lists all child nodes, including text nodes.
+
+DOM collections
+As we can see, childNodes looks like an array. But actually it’s not an array, but rather a collection – a special 
+array-like iterable object.
+document.body.childNodes
+1. DOM collections are read-only
+2 . DOM collections are live
+Siblings and the parent
+Siblings are nodes that are children of the same parent.
+
+There are two main sets of them:
+
+For all nodes: parentNode, childNodes, firstChild, lastChild, previousSibling, nextSibling.
+For element nodes only: parentElement, children, firstElementChild, lastElementChild, previousElementSibling, nextElementSibling.
+
+Searching: getElement*, querySelector* : 
+
+document.getElementById or just id
+If an element has the id attribute, we can get the element using the method document.getElementById(id), 
+no matter where it is.
+The id must be unique
+The id must be unique. There can be only one element in the document with the given id.
+Only document.getElementById, not anyElem.getElementById
+
+querySelectorAll
+By far, the most versatile method, elem.querySelectorAll(css) returns all elements inside elem matching the given 
+CSS selector.
+
+<ul>
+  <li>The</li>
+  <li>test</li>
+</ul>
+<ul>
+  <li>has</li>
+  <li>passed</li>
+</ul>
+<script>
+  let elements = document.querySelectorAll('ul > li:last-child');
+
+  for (let elem of elements) {
+    alert(elem.innerHTML); // "test", "passed"
+  }
+</script>
+
+
+#: matches
+Previous methods were searching the DOM.
+
+The elem.matches(css) does not look for anything, it merely checks 
+if elem matches the given CSS-selector. It returns true or false.
+
+# : closest : 
+The method elem.closest(css) looks for the nearest ancestor that matches the CSS-selector. The elem itself is also 
+included in the search.
+
+In other words, the method closest goes up from the element and checks each of parents. If it matches the selector, 
+then the search stops, and the ancestor is returned.
+
+For instance:
+
+<h1>Contents</h1>
+
+<div class="contents">
+  <ul class="book">
+    <li class="chapter">Chapter 1</li>
+    <li class="chapter">Chapter 2</li>
+  </ul>
+</div>
+
+<script>
+  let chapter = document.querySelector('.chapter'); // LI
+
+  alert(chapter.closest('.book')); // UL
+  alert(chapter.closest('.contents')); // DIV
+
+  alert(chapter.closest('h1')); // null (because h1 is not an ancestor)
+</script>
+
+
+Method	        Searches by...	Can call on an element?	    Live?
+querySelector	 CSS-selector	       ✔	                 -
+querySelectorAll	CSS-selector	   ✔	                 -
+getElementById	      id	                   -	                 -
+getElementsByName	name	           -                   	✔
+getElementsByTagName	tag or '*'	     ✔                	✔
+getElementsByClassName	class	✔	✔
+
+# innerHTML: the contents
+The innerHTML property allows to get the HTML inside the element as a string.
+
+We can also modify it. So it’s one of the most powerful ways to change the page.
+If innerHTML inserts a <script> tag into the document – it becomes a part of HTML, but doesn’t execute.
+# : Beware: “innerHTML+=” does a full overwrite
+# : outerHTML: full HTML of the element
+The outerHTML property contains the full HTML of the element. That’s like innerHTML plus the element itself.
+# : nodeValue/data: text node content
+The innerHTML property is only valid for element nodes.
+Other node types, such as text nodes, have their counterpart: nodeValue and data properties. These two are almost the
+ same for practical use, there are only minor specification differences. So we’ll use data, because it’s shorter.
+# : textContent: pure text
+The textContent provides access to the text inside the element: only text, minus all <tags>.
+
+The “hidden” property
+The “hidden” attribute and the DOM property specifies whether the element is visible or not.
+
+Attributes and properties
+When the browser loads the page, it “reads” (another word: “parses”) the HTML and generates DOM objects from it.
+ For element nodes, most standard HTML attributes automatically become properties of DOM objects.
+
+For instance, if the tag is <body id="page">, then the DOM object has body.id="page".
+
+But the attribute-property mapping is not one-to-one! In this chapter we’ll pay attention to separate these
+ two notions, to see how to work with them, when they are the same, and when they are different.
+
+ DOM properties
+We’ve already seen built-in DOM properties. There are a lot. But technically no one limits us, and if there aren’t 
+enough, we can add our own.
+
+document.body.myData = {
+  name: 'Caesar',
+  title: 'Imperator'
+};
+
+alert(document.body.myData.title); // Imperator
+
+HTML attributes
+In HTML, tags may have attributes. When the browser parses the HTML to create DOM objects for tags, it recognizes 
+standard attributes and creates DOM properties from them.
+
+<body id="test" something="non-standard">
+  <script>
+    alert(document.body.id); // test
+    // non-standard attribute does not yield a property
+    alert(document.body.something); // undefined
+  </script>
+</body>
+
+Please note that a standard attribute for one element can be unknown for another one
+
+So, if an attribute is non-standard, there won’t be a DOM-property for it. Is there a way to access such attributes?
+
+Sure. All attributes are accessible by using the following methods:
+
+elem.hasAttribute(name) – checks for existence.
+elem.getAttribute(name) – gets the value.
+elem.setAttribute(name, value) – sets the value.
+elem.removeAttribute(name) – removes the attribute.
+
+HTML attributes have the following features:
+
+Their name is case-insensitive (id is same as ID).
+Their values are always strings.
+
+# DOM properties are typed
+  DOM properties are not always strings. For instance, the input.checked property (for checkboxes) is a boolean:
+# : Attributes – is what’s written in HTML.
+    Properties – is what’s in DOM objects.  
+
+# : Modifying the document
+DOM modification is the key to creating “live” pages.
+
+Creating an element
+document.createElement(tag)
+Creates a new element node with the given tag:
+
+let div = document.createElement('div');
+
+Insertion methods
+
+<script>
+  ol.before('before'); // insert string "before" before <ol>
+  ol.after('after'); // insert string "after" after <ol>
+
+  let liFirst = document.createElement('li');
+  liFirst.innerHTML = 'prepend';
+  ol.prepend(liFirst); // insert liFirst at the beginning of <ol>
+
+  let liLast = document.createElement('li');
+  liLast.innerHTML = 'append';
+  ol.append(liLast); // insert liLast at the end of <ol>
+</script>
+
+before
+prepend
+0
+1
+2
+append
+after
+
+Methods to create new nodes:
+
+document.createElement(tag) – creates an element with the given tag,
+document.createTextNode(value) – creates a text node (rarely used),
+elem.cloneNode(deep) – clones the element, if deep==true then with all descendants.
+Insertion and removal:
+
+node.append(...nodes or strings) – insert into node, at the end,
+node.prepend(...nodes or strings) – insert into node, at the beginning,
+node.before(...nodes or strings) –- insert right before node,
+node.after(...nodes or strings) –- insert right after node,
+node.replaceWith(...nodes or strings) –- replace node.
+node.remove() –- remove the node.
+Text strings are inserted “as text”.
+
+There are also “old school” methods:
+
+parent.appendChild(node)
+parent.insertBefore(node, nextSibling)
+parent.removeChild(node)
+parent.replaceChild(newElem, node)
+All these methods return node.
+
+Given some HTML in html, elem.insertAdjacentHTML(where, html) inserts it depending on the value of where:
+
+"beforebegin" – insert html right before elem,
+"afterbegin" – insert html into elem, at the beginning,
+"beforeend" – insert html into elem, at the end,
+"afterend" – insert html right after elem.
+
+
+# : Styles and classes
+
+There are generally two ways to style an element:
+
+1 . Create a class in CSS and add it: <div class="...">
+2. Write properties directly into style: <div style="...">.
+
+The elem.className corresponds to the "class" attribute.
+
+For instance:
+
+<body class="main page">
+  <script>
+    alert(document.body.className); // main page
+  </script>
+</body>
+
+# : If we assign something to elem.className, it replaces the whole string of classes. Sometimes that’s what we need,
+    but often we want to add/remove a single class.
+# : Methods of classList:
+elem.classList.add/remove("class") – adds/removes the class.
+elem.classList.toggle("class") – adds the class if it doesn’t exist, otherwise removes it.
+elem.classList.contains("class") – checks for the given class, returns true/false.
+
+Element style
+The property elem.style is an object that corresponds to what’s written in the "style" attribute. Setting
+ elem.style.width="100px" works the same as if we had in the attribute style a string width:100px.
+
+For multi-word property the camelCase is used:
+
+background-color  => elem.style.backgroundColor
+z-index           => elem.style.zIndex
+border-left-width => elem.style.borderLeftWidth 
+
+Mind the units
+Don’t forget to add CSS units to values.
+
+Window sizes and scrolling
+
+alert( window.innerWidth ); // full window width
+alert( document.documentElement.clientWidth ); // window width minus the scrollbar
+Read the current scroll: window.pageYOffset/pageXOffset.
+
+Change the current scroll:
+
+window.scrollTo(pageX,pageY) – absolute coordinates,
+window.scrollBy(x,y) – scroll relative the current place,
+elem.scrollIntoView(top) – scroll to make elem visible (align with the top/bottom of the window).

@@ -1,0 +1,125 @@
+A callback function is a function passed into another function as an argument, which is
+ then invoked inside the outer function to complete some kind of routine or action.
+
+CallBack Hell -> Callback hell is a phenomenon where a Callback is called inside another Callback. 
+It is the nesting of multiple Callbacks inside a function. If you look at the design of the code,
+ it seems just like a pyramid. Thus the Callback hell is also referred to as the 'Pyramid of Doom'
+
+ Callabck Hell :
+
+ fetchRandomJoke((joke) => {
+    console.log(joke);
+
+    translateJoke(joke, (translatedJoke) => {
+        console.log(translatedJoke);
+
+        postJoke(translatedJoke, () => {
+            console.log("Joke posted successfully!");
+        });
+    });
+});
+
+with Promise : 
+
+fetchRandomJoke()
+    .then((joke) => {
+        console.log(joke);
+        return translateJoke(joke);
+    })
+    .then((translatedJoke) => {
+        console.log(translatedJoke);
+        return postJoke(translatedJoke);
+    })
+    .then(() => {
+        console.log("Joke posted successfully!");
+    })
+    .catch((error) => {
+        console.error("Something went wrong:", error);
+    });
+
+    with async await : 
+
+    async function tellJoke() {
+    try {
+        const joke = await fetchRandomJoke();
+        console.log(joke);
+
+        const translatedJoke = await translateJoke(joke);
+        console.log(translatedJoke);
+
+        await postJoke(translatedJoke);
+        console.log("Joke Translated & posted successfully!");
+    } catch (error) {
+        console.error("Something went wrong:", error);
+    }
+};
+
+tellJoke();
+
+Promise in javascript : 
+   The Promise object represents the eventual completion (or failure) of an asynchronous operation and its resulting value.
+
+The function passed to new Promise is called the executor. When new Promise is created, the executor runs
+ automatically. It contains the producing code which should eventually produce the result
+
+ let promise = new Promise(function(resolve, reject) {
+  // executor (the producing code, "singer")
+});
+The promise object returned by the new Promise constructor has these internal properties:
+
+state — initially "pending", then changes to either "fulfilled" when resolve is called or "rejected" when reject is called.
+result — initially undefined, then changes to value when resolve(value) is called or error when reject(error) is called.
+
+There can be only a single result or an error
+The executor should call only one resolve or one reject. Any state change is final.
+
+All further calls of resolve and reject are ignored:
+
+The state and result are internal
+The properties state and result of the Promise object are internal. We can’t directly access them. We can use the methods
+ .then/.catch/.finally for that
+
+ Consumers: then, catch
+The most important, fundamental one is .then.
+
+The syntax is:
+
+promise.then(
+  function(result) { /* handle a successful result */ },
+  function(error) { /* handle an error */ }
+);
+catch
+If we’re interested only in errors, then we can use null as the first argument: .then(null, errorHandlingFunction).
+ Or we can use .catch(errorHandlingFunction), which is exactly the same:
+
+ Cleanup: finally 
+ A finally handler has no arguments. In finally we don’t know whether the promise is successful or not
+ A finally handler “passes through” the result or error to the next suitable handler.
+  Promise  Chaining
+A common need is to execute two or more asynchronous operations 
+back to back, where each subsequent operation starts when the
+ previous operation succeeds, with the result from the
+  previous
+  Error handling with promises
+Promise chains are great at error handling. When a promise rejects, the control jumps to the closest rejection handler.
+# if we want to don't break the sequential excecution then for every then we should write the catch block for that. 
+# async function is used for writing asynchronus function . It always
+  return a Promise either we return any value or Promise
+# async and await combo is used for handling promises
+# await can be used only inside async function    
+# in async await js engine waits for promise to
+ resolve while in promsie.then it does not wait
+ # If we have multiple await sattement inside an async function then if all have same waiting period then it all 
+ resolve at that time only.
+
+ How fetch works 
+fetch return an promise when that promise resolved it returns an Response object . 
+Response.body Read only
+A ReadableStream of the body contents.
+Response.json()
+Returns a new Response object for returning the provided JSON encoded data.
+
+
+
+
+

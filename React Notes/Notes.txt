@@ -1,0 +1,188 @@
+React
+The library for web and native user interfaces . It uses reusable components .
+
+What is the Virtual DOM?
+The virtual DOM (VDOM) is a programming concept where an ideal, or “virtual”, representation of a UI is kept 
+in memory and synced with the “real” DOM by a library such as ReactDOM. This process is called reconciliation.
+
+What is “React Fiber”?
+Fiber is the new reconciliation engine in React 16. Its main goal is to enable incremental rendering of 
+the virtual DOM.
+
+reconciliation
+The algorithm React uses to diff one tree with another to determine which parts need to be changed.
+
+
+It is differne than the shadow dom . 
+
+Controlled and uncontrolled components : 
+In React, a component’s state can be controlled by either the React component itself or the DOM. 
+These two different ways of control result to two types of components in React, namely, controlled and 
+uncontrolled components
+
+Controlled Components
+In a controlled component, the state is maintained by the React component itself. 
+This state is updated via events, usually tied to input fields in a form. This means that 
+the value of the input field is always controlled by the state of the React component.
+
+Here’s a simple example of a controlled component:
+
+import React, { useState } from 'react';
+
+function ControlledForm() {
+  const [value, setValue] = useState('');
+
+  const handleChange = (event) => {
+    setValue(event.target.value);
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    alert(`input's value: ${value}`);
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input type="text" value={value} onChange={handleChange} />
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+
+Uncontrolled Components
+In contrast, an uncontrolled component maintains its own internal state. This means that you query 
+the DOM using a ref to find its current value when you need it, rather than storing it in state. 
+This approach is closer to traditional HTML.
+
+import React, { useRef } from "react";
+
+function UnControlledForm() {
+  const ref1 = useRef(null);
+  const ref2 = useRef(null);
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    console.log(ref1.current.files[0]);
+    console.log(ref2.current);
+  };
+
+  return (
+    <form onSubmit={submitHandler}>
+      <input type="text" name="name" ref={ref2} />
+      <input type="file" name="myFile" ref={ref1} />
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+
+export default UnControlledForm;
+
+Error Boundry : 
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    // You can also log the error to an error reporting service
+    logErrorToMyService(error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // You can render any custom fallback UI
+      return <h1>Something went wrong.</h1>;
+    }
+
+    return this.props.children; 
+  }
+}
+
+below type of error error boundry does not pick 
+Event handlers
+Asynchronous code (e.g. setTimeout or requestAnimationFrame callbacks)
+Server side rendering
+Errors thrown in the error boundary itself (rather than its children)
+
+React Router DOm : 
+
+React router dom is used for navigating 
+React v6.4 ships a provider component <RouterProvider/>, it takes a route object or component as a prop. 
+This component is responsible for making routes defined in the application accessible.
+
+import React from "react";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Link
+} from "react-router-dom";
+import Products from "./components/Products";
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <div>
+        <h1>Hello from home</h1>
+        <Link to="products">View Products Page</Link>
+      </div>
+    ),
+  },
+  {
+    path: "products",
+    element: <Products />,
+    children: [
+      {
+        path: "kids",
+        element: (
+          <div>
+            <h1>Welcome to the Kids Products Shop</h1>
+            <ul>
+              <li><Link to='crayon'>Crayon</Link></li>
+              <li><Link to='books'>Books</Link></li>
+            </ul>
+          </div>
+        ),
+      },
+      {
+        path: "adults",
+        element: (
+          <div>
+            <h1>Welcome to the Adults Products Shop</h1>
+            <ul>
+              <li><Link to='vodka'>Vodka</Link></li>
+              <li><Link to='watch'>Watch</Link></li>
+            </ul>
+          </div>
+        ),
+      },
+      {
+        path: ":category/:product",
+        element: (
+          <div>
+            <h1>Welcome to the Product</h1>
+          </div>
+        ),
+      },
+    ]
+  },
+]);
+function App(){
+  return <RouterProvider router={router} />
+}
+export default App
+
+
+
+1. Redux : State management tool with a single store as a CDS .
+2. Reducer : which stores the state and returns the newly updated state. 
+ (i) It should be synchronous function
+ (ii) it should not mutuate the original state 
+3. actions : two properties type and payload 
+4. Dispatch : used to dispatch actions to update the store . 
+
